@@ -4,9 +4,9 @@
 
 ```text
 Lugroup_DTCO/
-├─ exercise/
-│  ├─ raw_project/
-│  └─ Ref/
+├─ exercise/ 练习项目，请根据readme 对raw_project进行修改/实现
+│  ├─ raw_project/ 原始工程
+│  └─ Ref/ 参考结果
 ├─ THzFinFET_DTCO/
 │  ├─ ref_未分类/
 │  ├─ finfet-324.pptx
