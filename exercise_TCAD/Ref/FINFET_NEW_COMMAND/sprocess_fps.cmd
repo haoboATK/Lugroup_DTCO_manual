@@ -1,0 +1,792 @@
+#### 2025.11.20 : this version has been remarked,  and delete params ####
+
+###### 0:based define: math ######
+math coord.ucs
+AdvancedCalibration 2015.06
+AdvancedCalibrationMechanics
+SiGe_and_Stress_Effect 1 1 1 0
+
+
+source mechParams.fps
+source user_proc.fps
+
+# Set mechanical parameters
+pdbSet Mechanics EtchDepoRelax 0
+pdbSet Grid MGoals Keep3DBrep 0
+pdbSet Math flow 3D ILS.tolrel     1e-15
+pdbSet Math flow 3D ILS.refine.sts 1
+pdbSet Silicon SiliconGermanium.ConversionConc 1
+pdbSet Silicon Skip.Parameter.Interpolation 0
+
+# Set math section - multi-thread simulation
+math  numThreads=4
+sde off
+
+
+####### 1:device parameters ######
+
+fset Threads 4
+fset Type      "nMOS"
+fset Wt        0.005                 ;# Fin top width
+fset Wb        0.005              ;# Fin bottom width
+fset H         0.03                    ;# Fin height
+fset L         0.015                    ;# Channel length
+fset Tiox      0.0006                ;# Gate interlayer oxide thickness
+fset GeMoleSD  0.3
+fset GeMoleCh  1
+fset GeMoleSRB 0.8
+fset Dtemp     650
+fset Dtime     1e-3
+fset sOri      "100"
+fset cDir      "110"
+
+
+
+# Structure parameters, [um]
+set W        0.5*($Wt+$Wb) ;# Fin average width
+set bHepi    0.017                  ;# SD Epi Shape
+set mHepi    0.004                  ;# SD Epi Shape
+set tHepi    0.011                  ;# SD Epi Shape
+set bLepi    0.003                  ;# SD Epi Shape
+set mLepi    0.015                  ;# SD Epi Shape
+set tLepi    0.008                  ;# SD Epi Shape
+set Tox      0.0017                 ;# Total physical thickness of gate insulator
+#set Tiox     0.0006                 ;# Gate interlayer oxide thickness
+set Thfo2    0.0011                 ;# Gate high-k thickness
+set Lsp0     0.005                  ;# Nitride spacer foot from gate to epi S/D
+set Lsp1     0.007                  ;# Nitride spacer foot from gate to contact
+#set Ppitch   0.044                  ;# Poly pitch
+set Ppitch   0.029+$L            ;# Poly pitch
+set Tgate    0.032                  ;# Poly height
+set Tsti     0.100                  ;# STI trench depth
+set Tbuf     0.500                  ;# Relaxed SiGe depth
+set Tsub     1.0                    ;# Substrate depth
+set Tcesl    0.015                  ;# Nitride on top of gate
+set Tild     0.080                  ;# ILD on top of Nitride
+set Tnisi    0.005                  ;# NiSi thickness
+set Fpitch   0.024                  ;# Fin pitch
+set Lm0b     0.015                  ;# Contact length
+set Lm0t     0.018                  ;# Contact length
+set PY       0.050                  ;# Gate extension
+set Fangle   55.0                   ;# SD facet angle
+
+# Doping parameters, [/cm3]
+set Nsub     1.0e15                 ;# Substrate doping
+set Nch      1.0e15                 ;# channel doping
+set Nsd      2.0e20                 ;# SD doping   <-- ÓÃµÄÊÇ 2.0e20 ÄÇÐÐ
+set Nstop    2.0e18                 ;# channel stop doping
+
+if { $Type eq "nMOS" } {
+
+       set Dch      "Boron"
+       set Dsd      "Arsenic"
+       set Dstop    "Boron"
+       set Esd      0.004
+       set dGe      0.001
+       set dDG      0.001
+
+       # Stress/strain input - SD SiGe Mole Fraction
+       set iSMG    -1.0                    ;# nMOS metal gate stress [GPa]
+
+} else {
+
+       set Dch      "Phosphorus"
+       set Dsd      "Boron"
+       set Dstop    "Arsenic"
+       set Esd      0.004
+       set dGe      0.001
+       set dDG      0.001 
+
+       # Stress/strain input - SD SiGe Mole Fraction
+       set iSMG     1.0                    ;# pMOS metal gate stress [GPa]
+
+}
+
+set iSsti    1.0                    ;# STI stress [GPa]
+set iScont   1.0                    ;# Contact/M0 stress [GPa]
+set dXjSD    0.001
+#-----------------------------------------------------
+# Derived dimensions
+set AX0     0.0
+set AX1    [expr (0.5*$Ppitch)]
+set Xmin    $AX0
+set Xmax    $AX1
+set Ymin    0.0
+set Ymax    [expr (0.5*$Fpitch)]
+set PX0     [expr (-0.5*$L)]
+set PX1     [expr (0.5*$L)]
+set PY0     [expr (-0.5*$Fpitch-$PY)]
+set PY1     [expr (0.5*$Fpitch+$PY)]
+set SP0X0   [expr ($PX0-$Lsp0)]
+set SP0X1   [expr ($PX1+$Lsp0)]
+set SP0Y0   [expr ($PY0-$Lsp0)]
+set SP0Y1   [expr ($PY1+$Lsp0)]
+set SP1X0   [expr ($PX0-$Lsp1)]
+set SP1X1   [expr ($PX1+$Lsp1)]
+set SP1Y0   [expr ($PY0-$Lsp1)]
+set SP1Y1   [expr ($PY1+$Lsp1)]
+set M0X0    [expr (0.5*$Ppitch-0.5*$Lm0t)]
+set M0X1    [expr (0.5*$Ppitch+0.5*$Lm0t)]
+set M0Y0    [expr (-1.0*$Fpitch)]
+set M0Y1    [expr ( 1.0*$Fpitch)]
+set Hgate   [expr (-1.0*($Tgate+$Tox))]
+set Hcesl   [expr ($Hgate-$Tcesl)]
+set Hild    [expr ($Hcesl-$Tild)]
+set Htopr [expr ($H+(2.0/3.0)*($Tbuf-$H))]
+
+
+if { $Wb == $Wt } {
+
+    set Afin    90.0
+    set Afin0   90.0
+
+} else {
+
+    set Afin    [expr {180.0/3.14159265 * atan($H/(0.5*($Wb-$Wt)))}]
+    set Afin0   [expr {180.0/3.14159265 * atan($H/(0.5*($Wb-$Wt)))}]
+
+}
+
+
+
+
+####### 2:inital physics section ######
+line y loc=$Ymin   tag=back
+line y loc=$Ymax   tag=front
+line z loc=$Xmin   tag=left
+line z loc=$Xmax   tag=right
+line x loc=-0.15
+line x loc=0       tag=top
+line x loc=$H
+line x loc=$Tsub   tag=bottom
+region Silicon xlo=top xhi=bottom ylo=back yhi=front zlo=left zhi=right substrate
+
+if { $sOri eq "100" && $cDir eq "100" } {
+
+    init field=Boron concentration=$Nsub wafer.orient = { 0 0 1 } flat.orient = { 1 0 0 } !DelayFullD
+
+} elseif { $sOri eq "100" && $cDir eq "110" } {
+
+    init field=Boron concentration=$Nsub wafer.orient = { 0 0 1 } flat.orient = { 1 1 0 } !DelayFullD
+
+} elseif { $sOri eq "110" && $cDir eq "100" } {
+
+    init field=Boron concentration=$Nsub wafer.orient = { 1 1 0 } flat.orient = { 0 0 1 } !DelayFullD
+
+} elseif { $sOri eq "110" && $cDir eq "110" } {
+
+    init field=Boron concentration=$Nsub wafer.orient = { 1 -1 0 } flat.orient = { 1 1 0 } !DelayFullD
+
+}
+# refinement at interfaces
+pdbSet Grid SnMesh max.box.angle.3d 165
+grid set.min.normal.size= 0.005 \
+     set.normal.growth.ratio.3d= 2 \
+     set.max.points= 5000000
+refinebox interface.materials= {Silicon Polysilicon Oxide Nitride Oxynitride}
+
+####### 3:inital grid ######
+
+##DFISE          -Z   Y    X               
+refinebox name=All \
+          min= "-2.0         $Ymin              $Xmin" \
+          max= " $Tsub       $Ymax              $Xmax" \
+          xrefine= 0.2*$Tsub yrefine= $W/2.0    zrefine= $L/2.0
+
+refinebox name=eSRB \
+          min= " $H-0.005    $Ymin              $Xmin" \
+          max= " $H+0.005    $Ymax              $Xmax" \
+          xrefine= 0.001     yrefine= $W/4.0    zrefine= $L/4.0
+
+set tYmin  [expr (-2.0*$W)]
+set tYmax  [expr (2.0*$W)]
+##DFISE          -Z   Y    X               
+refinebox name=gSTI \
+          min= "-0.05        $tYmin             $Xmin" \
+          max= " 0.10        $tYmax             $Xmax" \
+          xrefine= 0.01      yrefine= $W/5.0    zrefine= $L/5.0
+
+pdbSet InfoDefault 1
+
+
+##### 4: set create device ######
+
+# difine  relaxed boundary
+pdbSetDouble Silicon Mechanics TopRelaxedNodeCoord $Htopr*1.0e-4
+#----- Strained Silicon epi on relaxed SiGe epi -----
+etch  material=Silicon  thickness=$Tbuf
+
+#- SRB -
+       set fieldGe [MoleFractionFields SiliconGermanium $GeMoleSRB]
+       set fieldList [lappend fieldGe Boron=1e15]
+       eval deposit  SiSRB  type=fill  coord=$Tsti    region.name=SRB fields.values= { $fieldList }
+       #- Channel stop doping -
+       set fieldGe [MoleFractionFields SiliconGermanium $GeMoleSRB]
+       set fieldList [lappend fieldGe $Dstop=$Nstop]
+       eval deposit  SiStop type=fill  coord=$H+$dXjSD      region.name=ChStop0 fields.values= { $fieldList }
+       #- Channel doping -
+       set fieldGe [MoleFractionFields SiliconGermanium $GeMoleSRB]
+       set fieldList [lappend fieldGe $Dstop=$Nch]
+       eval deposit  SiStop type=fill  coord=$H+0.000       region.name=ChStop fields.values= { $fieldList }
+#---
+
+#- Channel -
+       set fieldGe [MoleFractionFields SiliconGermanium $GeMoleCh]
+       set fieldList [lappend fieldGe $Dch=$Nch]
+       eval deposit  SiFin  type=fill  coord=0.0      region.name=ChFin fields.values= { $fieldList }
+       #- Define the region for the source/drain density gradient model -
+       set tPX0   [expr ($PX0-$Lsp0+$dGe+$dDG)]
+       set tPX1   [expr ($PX1+$Lsp0-$dGe-$dDG)]
+       polygon name=g0Layout min= { $PY0 $tPX0 } max= { $PY1 $tPX1 } rectangle
+       mask name=G0 polygons= {g0Layout} negative
+       photo mask=G0 thickness=0.001
+       etch    material= {SiFin} type=anisotropic  thickness=2*$H
+       strip Photoresist
+       polygon    clear
+       set fieldGe [MoleFractionFields SiliconGermanium $GeMoleCh]
+       set fieldList [lappend fieldGe $Dch=$Nch]
+       eval deposit  SiGeSDE  type=fill  coord=0.0      region.name=SDE fields.values= { $fieldList }
+#---
+diffuse temp=700<C> time=1.0e-6<s> stress.relax 
+#-----FIN define -----
+set tAY0  [expr (-0.5*$Wt)]
+set tAY1  [expr (0.5*$Wt)]
+mask name=FIN left=$tAY0 right=$tAY1 back=$AX0 front=$AX1 negative
+photo mask=FIN thickness=0.001
+etch    material= {SiFin SiGeSDE} type=trapezoidal  angle=$Afin  thickness=1*$Tsti
+strip Photoresist
+
+etch    material= {SiStop} type=trapezoidal  angle=85  thickness=1.0*($Tsti-$H)
+######################################################################################
+#####----- Fin Corner Round Etch                                            -----#####
+#####----- Polyhedron is used to accurately control the fin Corner Rounding -----#####
+#####----- Dummy polyhedron is overlapped with Si fin and removed.          -----#####
+#####----- Rounded fin is left.                                             -----#####
+set PI  3.14159265
+set cR  0.0025                                ;# Fin corner radius
+##-- Rounding is approximated by 4 edges. --##
+##-- Points for etch polyhedron           --##
+set alpha  [expr (90.0-0.5*$Afin)]
+set rX     $cR
+set rY     [expr (0.5*$Wt-$cR/tan($PI/180.0*$alpha))]
+set nP     5
+set dA     [expr ($Afin/($nP-1))]
+set tx0    [expr ($Xmin-1.0)]
+set tx1    [expr ($Xmax+1.0)]
+set theta   [expr (0*$dA)]
+set xv      [expr ($rX - $cR*cos($PI/180.0*$theta))]
+set yv      [expr ($rY + $cR*sin($PI/180.0*$theta))]
+eval point name=pf0  coord= \{$xv $yv $tx0\}
+eval point name=pb0  coord= \{$xv $yv $tx1\}
+set theta   [expr (1*$dA)]
+set xv      [expr ($rX - $cR*cos($PI/180.0*$theta))]
+set yv      [expr ($rY + $cR*sin($PI/180.0*$theta))]
+eval point name=pf1  coord= \{$xv $yv $tx0\}
+eval point name=pb1  coord= \{$xv $yv $tx1\}
+set theta   [expr (2*$dA)]
+set xv      [expr ($rX - $cR*cos($PI/180.0*$theta))]
+set yv      [expr ($rY + $cR*sin($PI/180.0*$theta))]
+eval point name=pf2  coord= \{$xv $yv $tx0\}
+eval point name=pb2  coord= \{$xv $yv $tx1\}
+set theta   [expr (3*$dA)]
+set xv      [expr ($rX - $cR*cos($PI/180.0*$theta))]
+set yv      [expr ($rY + $cR*sin($PI/180.0*$theta))]
+eval point name=pf3  coord= \{$xv $yv $tx0\}
+eval point name=pb3  coord= \{$xv $yv $tx1\}
+set theta   [expr (4*$dA)]
+set xv      [expr ($rX - $cR*cos($PI/180.0*$theta))]
+set yv      [expr ($rY + $cR*sin($PI/180.0*$theta))]
+eval point name=pf4  coord= \{$xv $yv $tx0\}
+eval point name=pb4  coord= \{$xv $yv $tx1\}
+eval point name=pf00 coord= \{ -1.0*$Tox 0.0 $tx0 \}
+eval point name=pf11 coord= \{ $H 0.5*$Wb+$Tox $tx0 \}
+eval point name=pf01 coord= \{ -1.0*$Tox 0.5*$Wb+$Tox $tx0 \}
+eval point name=pb00 coord= \{ -1.0*$Tox 0.0 $tx1 \}
+eval point name=pb11 coord= \{ $H 0.5*$Wb+$Tox $tx1 \}
+eval point name=pb01 coord= \{ -1.0*$Tox 0.5*$Wb+$Tox $tx1 \}
+point list
+
+##-- Polygons for etch polyhedron          --##
+set tnP  [expr ($nP-1)]
+for {set i 0} {$i < $tnP} {incr i 1} {
+  set j       [expr ($i+1)]
+  set p0Name   "pf$i"
+  set p1Name   "pf$j"
+  set p2Name   "pb$j"
+  set p3Name   "pb$i"
+  set pLName   "pL$i"
+  eval polygon name=$pLName points = \{ $p0Name $p1Name $p2Name $p3Name \}
+}
+set p0Name   "pf$tnP"
+set p1Name   "pf11"
+set p2Name   "pb11"
+set p3Name   "pb$tnP"
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ $p0Name $p1Name $p2Name $p3Name \}
+set tnP  [expr ($nP-0)]
+set p0Name   "pf11"
+set p1Name   "pf01"
+set p2Name   "pb01"
+set p3Name   "pb11"
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ $p0Name $p1Name $p2Name $p3Name \}
+set tnP  [expr ($nP+1)]
+set p0Name   "pf01"
+set p1Name   "pf00"
+set p2Name   "pb00"
+set p3Name   "pb01"
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ $p0Name $p1Name $p2Name $p3Name \}
+set tnP  [expr ($nP+2)]
+set p0Name   "pf00"
+set p1Name   "pf0"
+set p2Name   "pb0"
+set p3Name   "pb00"
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ $p0Name $p1Name $p2Name $p3Name \}
+set tnP  [expr ($nP+3)]
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ pf0 pf1 pf2 pf3 pf4 pf11 pf01 pf00 \}
+set tnP  [expr ($nP+4)]
+set pLName   "pL$tnP"
+eval polygon name=$pLName points = \{ pb0 pb1 pb2 pb3 pb4 pb11 pb01 pb00 \}
+
+##--  Etch polyhedron  --##
+polyhedron name= crEtch polygons = { pL0 pL1 pL2 pL3 pL4 pL5 pL6 pL7 pL8 pL9 } info=2
+polyhedron list
+insert polyhedron=crEtch replace.materials= { Silicon SiFin SiStop SiGeSDE } \
+       new.material=Oxynitride new.region=etchedDummy
+PolyHedronClear
+strip Oxynitride
+
+
+
+#####----- Mesh refinement -----##### 
+set tYmin  [expr (-2.0*$W)]
+set tYmax  [expr (2.0*$W)]
+##DFISE          -Z   Y    X               
+refinebox name=WellIIP0 \
+          min= " $H-0.005    $tYmin             $Xmin" \
+          max= " $H+0.006    $tYmax             $Xmax" \
+          xrefine= 0.005     yrefine= $W/5.0   zrefine= $L/5.0
+
+##DFISE          -Z   Y    X               
+refinebox name=WellIIP1 \
+          min= " $H-0.001    $tYmin             $Xmin" \
+          max= " $H+0.004    $tYmax             $Xmax" \
+          xrefine= 0.0005     yrefine= $W/5.0   zrefine= $L/5.0
+
+set tYmin  [expr (-1.5*$W)]
+set tYmax  [expr (1.5*$W)]
+##DFISE          -Z   Y    X               
+refinebox name=STI \
+          min= " 0.0         $tYmin             $Xmin" \
+          max= " $H+0.000    $tYmax             $AX1" \
+          xrefine= 0.1*$H    yrefine= 0.1*$W    zrefine= 0.1*$L
+
+pdbSet InfoDefault 1
+
+
+#----- STI fill -----
+deposit Oxide type=fill coord=$H
+set Asti 25.0
+etch    material= {Oxide} type=trapezoidal  angle=$Asti  thickness=0.005
+#----- Gate oxide -----
+mgoals analytic.thickness=5e-4
+deposit GATEox  type=isotropic thickness=1*$Tiox  region.name=Gateoxide1
+#----- Divide the gate oxide into the side and the top for the accurate quantum correction -----
+set tA  [expr (0.5*(180-$Afin))]
+set dz  0.050
+set tz0 [expr (-1.0*$dz)]
+set tx0 [expr ($Xmin-1.0)]
+set tx1 [expr ($Xmax+1.0)]
+set ty0 [expr ($Ymin-1.0)]
+set ty1 [expr (0.5*$Wt+$dz/tan(3.14159265/180*$tA))]
+set tTPs [list [list $tz0 $ty0 $tx0] [list $tz0 $ty1 $tx0] [list $tz0 $ty1 $tx1] [list $tz0 $ty0 $tx1]]
+set tz1 [expr (0.5*$Wt*tan(3.14159265/180*$tA))]
+set ty0 [expr ($Ymin-1.0)]
+set ty1 0.0
+set tBPs [list [list $tz1 $ty0 $tx0] [list $tz1 $ty1 $tx0] [list $tz1 $ty1 $tx1] [list $tz1 $ty0 $tx1]]
+HexaHedron tgox $tTPs $tBPs
+polyhedron list
+insert polyhedron=tgox replace.materials= { GATEox } \
+       new.material=TopGATEox new.region=TopGateoxide1
+PolyHedronClear
+
+#----- Poly gate -----
+deposit  PolySilicon  type=fill  coord=$Hgate  region.name=GatePoly
+polygon name=gateLayout min= { $PY0 $PX0 } max= { $PY1 $PX1 } rectangle
+mask name=GATE polygons= {gateLayout} negative
+photo mask=GATE thickness=0.001
+etch    material= {PolySilicon} type=anisotropic  thickness=2*($Tgate+$H)
+strip Photoresist
+polygon    clear
+
+
+#----- Define the gate oxide under SDE -----
+set tx0   [expr ($PX1-0.000)]
+set tx1   [expr ($Xmax+0.001)]
+set ty0   [expr ($Ymin-0.001)]
+set ty1   [expr ($Ymax+0.001)]
+set tz0   [expr (-2*$Tox)]
+set tz1   [expr (2.0*$H)]
+polyhedron name=sde brick= {$tz0 $ty0 $tx0 $tz1 $ty1 $tx1}
+polyhedron list
+insert polyhedron=sde replace.materials= { GATEox TopGATEox } \
+       new.material=SDEox new.region=SDEoxide
+PolyHedronClear
+
+#----- spacer0 -----
+deposit  LowK  type=fill  coord=$Hgate  region.name=Spacer0
+polygon name=sp0Layout min= { $SP0Y0 $SP0X0 } max= { $SP0Y1 $SP0X1 } rectangle
+mask name=SP0 polygons= {sp0Layout} negative
+photo mask=SP0 thickness=0.001
+etch    material= {LowK} type=anisotropic  thickness=2*($Tgate+$H)
+strip Photoresist
+polygon    clear
+
+#####----- Mesh refinement -----##### 
+set tAY0  [expr (-0.5*$Wb-0.010)]
+set tAY1  [expr (0.5*$Wb+0.010)]
+##DFISE          -Z   Y    X               
+refinebox name=Active \
+          min= "-0.012       $tAY0              $AX0" \
+          max= " $H+0.010    $tAY1              $AX1" \
+          xrefine= 0.002     yrefine= 0.002     zrefine= 0.1*$L
+
+set tAY0  [expr (-0.5*$Wb-0.002)]
+set tAY1  [expr (0.5*$Wb+0.002)]
+set tspx0 [expr (-0.5*$L-$Lsp1-0.005)]
+set tspx1 [expr (0.5*$L+$Lsp1+0.005)]
+##DFISE          -Z   Y    X               
+refinebox name=ChannelL \
+          min= "-0.004       $tAY0              $tspx0" \
+          max= " $H+0.005    $tAY1              $PX0" \
+          xrefine= 0.002     yrefine= 0.001     zrefine= { 0.001 0.0005 }
+refinebox name=ChannelC \
+          min= "-0.004       $tAY0              $PX0" \
+          max= " $H+0.005    $tAY1              $PX1" \
+          xrefine= 0.002     yrefine= 0.001     zrefine= { 0.0005 0.1*$L 0.0005 }
+refinebox name=ChannelR \
+          min= "-0.004       $tAY0              $PX1" \
+          max= " $H+0.005    $tAY1              $tspx1" \
+          xrefine= 0.002     yrefine= 0.001     zrefine= { 0.0005 0.001 }
+
+set tAY0  [expr (-0.5*$Wb-0.002)]
+set tAY1  [expr (0.5*$Wb+0.002)]
+set tspx0 [expr ($SP0X0-0.002)]
+set tspx1 [expr ($SP0X0+0.002)]
+##DFISE          -Z   Y    X               
+refinebox name=ChannelL0 \
+          min= "-0.002       $tAY0              $tspx0" \
+          max= " $H+0.005    $tAY1              $tspx1" \
+          xrefine= 0.0010    yrefine= 0.0005    zrefine= 0.0005
+
+set tspx0 [expr ($SP0X1-0.002)]
+set tspx1 [expr ($SP0X1+0.002)]
+##DFISE          -Z   Y    X               
+refinebox name=ChannelR0 \
+          min= "-0.002       $tAY0              $tspx0" \
+          max= " $H+0.005    $tAY1              $tspx1" \
+          xrefine= 0.0010    yrefine= 0.0005    zrefine= 0.0005
+
+##DFISE          -Z   Y    X               
+refinebox name=BottomH \
+          min= " $H-0.002    $tAY0              $Xmin" \
+          max= " $H+0.007    $tAY1              $Xmax" \
+          xrefine= 0.0005    yrefine= 0.002     zrefine= 0.002 
+          
+
+#----- Etch the source/drain for the epi -----
+etch material = {SDEox GATEox TopGATEox SiFin SiGeSDE} type=anisotropic thickness=2*$Tiox+2*$H
+
+#----- Etch Silicon under spacer -----
+if { $dGe != 0 } {
+set tx0   [expr ($PX1+$Lsp0-$dGe)]
+set tx1   $Xmax
+set ty0   [expr (-0.5*$Wb-0.002)]
+set ty1   [expr ( 0.5*$Wb+0.002)]
+set tz0   [expr (-2.0*$Tox)]
+set tz1   [expr ($H+0.001)]
+polyhedron name=sdu brick= {$tz0 $ty0 $tx0 $tz1 $ty1 $tx1}
+polyhedron list
+insert polyhedron=sdu replace.materials= { SiFin SiGeSDE } new.material=Gas
+PolyHedronClear
+}
+
+#----- Generate S/D SiGe epi shape using polyhedron command -----
+#- SiGe or SiC source/drain generation
+set th    [expr ($H+0.002)]
+set ty0  [expr (-0.5*$Wb)]
+set ty1  [expr (0.5*$Wb)]
+
+#- Call the SiGe epi polyhedron generation procedure
+set tx0   [expr (0.5*$L+$Lsp0-0.0002)]
+set tx1   [expr ($Ppitch-0.5*$L-$Lsp0+0.0002)]
+set ty0   [expr (-0.5*$Wb-0.0001)]
+set ty1   [expr (0.5*$Wb+0.0001)]
+set tz0   [expr (-1.0*$Tox)]
+
+EpitaxySD sd $tx0 $tx1 $ty0 $ty1 $th $bHepi $mHepi $tHepi $bLepi $mLepi $tLepi $Fangle
+polyhedron list
+insert polyhedron=sd replace.materials= { Gas } \
+       new.material=SiGeSD new.region=SDepi
+PolyHedronClear
+
+
+
+###------------------------------------------------------------------------------------
+#----- in-situ doping -----
+sel SiGeSD             z=$Nsd   name=$Dsd   store
+set tPX1 [expr ($PX1+$Lsp0-$Esd)]
+set tHsd [expr ($H+$dXjSD)]
+sel SiFin   z="(z>$tPX1)?$Nsd:0.0"   name=$Dsd   store
+sel SiGeSDE z="(z>$tPX1)?$Nsd:0.0"   name=$Dsd   store
+sel SiStop  z="(z>$tPX1 && x<$tHsd)?$Nsd:0.0"   name=$Dsd   store
+
+set NgeL [MoleFractionFields SiliconGermanium $GeMoleSD]
+set Nge [lindex $NgeL 5]
+sel SiGeSD       z=$Nge    name=Germanium   store
+
+
+diffuse temp=$Dtemp<C> time=$Dtime<s> stress.relax 
+
+
+#----- spacer1 -----
+deposit  LowK  type=fill  coord=$Hgate  region.name=Spacer1
+polygon name=sp1Layout min= { $SP1Y0 $SP1X0 } max= { $SP1Y1 $SP1X1 } rectangle
+mask name=SP1 polygons= {sp1Layout} negative
+photo mask=SP1 thickness=0.001
+etch    material= {LowK} type=anisotropic  thickness=2*($Tgate+$H)
+strip Photoresist
+polygon    clear
+
+#----- ILD fill -----
+set tHgate   [expr ($Hgate+0.001)]
+deposit LowK type=fill coord=$tHgate region.name=ILDg
+
+
+#----- Poly Gate Removal -----
+strip PolySilicon
+
+
+#--- Stress Rebalance after gate removal ---------------------------------
+diffuse temp=450<C> time=1.0e-6<s> stress.relax 
+
+#----- HighK Deposition -----
+deposit HfO2    type=isotropic thickness=1*$Thfo2 region.name=Gateoxide2
+
+
+###------------------------------------------------------------------------------------
+#----- Metal Gate Deposition -----
+#--- Calculate intrinsic stress ---------------------------------
+set iS    [expr ($iSMG * 1.0e10 * ( 1.0 - 0.296 ) / ( 1.0 - 2.0 * 0.296 ))]
+doping name=SxxMG field=StressELXX depths= { 0 100 } stress.values= { $iS $iS }
+doping name=SyyMG field=StressELYY depths= { 0 100 } stress.values= { $iS $iS }
+doping name=SzzMG field=StressELZZ depths= { 0 100 } stress.values= { $iS $iS }
+
+set iStn  [expr ($iSMG * 1.0e10 * ( 1.0 - 0.25 ) / ( 1.0 - 2.0 * 0.25 ))]
+doping name=SxxMGtn field=StressELXX depths= { 0 100 } stress.values= { $iStn $iStn }
+doping name=SyyMGtn field=StressELYY depths= { 0 100 } stress.values= { $iStn $iStn }
+doping name=SzzMGtn field=StressELZZ depths= { 0 100 } stress.values= { $iStn $iStn }
+
+set tHgate   [expr ($Hgate+0.0010)]
+deposit material=TiNitride type=isotropic thickness=0.002 region.name=GateMetalTiN \
+        doping= { SxxMGtn SyyMGtn SzzMGtn }
+etch material= { TiNitride HfO2 } type=cmp coord=$tHgate
+
+
+deposit material=Tungsten type=fill coord= $tHgate region.name=GateMetal \
+        doping= { SxxMG SyyMG SzzMG }
+
+diffuse temp=450<C> time=1.0e-6<s> stress.relax 
+
+
+
+#----- CESL depo -----
+deposit Nitride type=fill coord=$Hcesl region.name=ILDm0
+
+
+#----- M0 fill -----
+set tMh     [expr ($H+0.005-$Hcesl)]
+set tMx     [expr (0.5*($Lm0t-$Lm0b))]
+set Avia    [expr (180.0/3.14159265*atan($tMh/$tMx))]
+polygon name=viaLayout min= { $M0Y0 $M0X0 } max= { $M0Y1 $M0X1 } rectangle
+mask name=VIA polygons= {viaLayout} 
+photo mask=VIA thickness=0.001
+etch    material= {Nitride LowK} type=trapezoidal  angle=$Avia  thickness=1*$Tsti
+strip Photoresist
+mask       clear
+polygon    clear
+
+
+
+#----- Via Metal Deposition -----
+#--- Calculate intrinsic stress ---------------------------------
+set iS    [expr ($iScont * 1.0e10 * ( 1.0 - 0.296 ) / ( 1.0 - 2.0 * 0.296 ))]
+doping name=SxxM0 field=StressELXX depths= { 0 100 } stress.values= { $iS $iS }
+doping name=SyyM0 field=StressELYY depths= { 0 100 } stress.values= { $iS $iS }
+doping name=SzzM0 field=StressELZZ depths= { 0 100 } stress.values= { $iS $iS }
+
+deposit Tungsten type=fill coord=$Hcesl+0.001 region.name=M0 doping= { SxxM0 SyyM0 SzzM0 }
+
+diffuse temp=450<C> time=1.0e-6<s> stress.relax 
+       
+
+####### 4.1 : set symmetry and contacts for device simulation ######
+transform reflect back
+#----- Contact for sdevice simulation -----
+contact bottom name=substrate Silicon
+contact point replace region=GateMetal.1  name=gate
+contact point replace region=M0.1         name=source
+contact point replace region=M0.2         name=drain
+
+###### 5: set remesh for device simulation ###### 
+
+#--Change refinement strategy and remesh-------------------------------
+##---------------Remeshing for device simulation--------##
+# clear the process simulation mesh
+refinebox clear
+refinebox !keep.lines
+refinebox clear.interface.mats
+line clear
+
+pdbSet Grid MGoals Keep3DBrep 0
+
+# Set very high values for adaptive meshing parameters
+pdbSet Grid AdaptiveField Refine.Abs.Error 1e37
+pdbSet Grid AdaptiveField Refine.Rel.Error 1e10
+pdbSet Grid AdaptiveField Refine.Target.Length 100.0
+
+# Set high quality delaunay meshes
+pdbSet Grid sMesh 1
+pdbSet Grid SnMesh DelaunayTolerance 5.0e-2
+pdbSet Grid SnMesh CoplanarityAngle 179
+
+# Set the interface spacing
+mgoals accuracy=1e-6
+pdbSet Grid SnMesh max.box.angle.3d 179
+grid Adaptive set.Delaunay.type= boxmethod \
+     set.min.normal.size= 0.01 \
+     set.normal.growth.ratio.3d= 8.0 \
+     set.max.points= 500000 \
+     set.max.neighbor.ratio= 1e6
+     
+# Which interfaces are to have interface meshes
+refinebox interface.materials= {Silicon SiFin GATEox TopGATEox Oxide HfO2}
+
+
+#####----- Mesh refinement -----#####
+set Ymax    [expr (0.5*$Fpitch+$PY+0.010)]
+set Ymin    [expr (-1.0*$Ymax)]
+set Xmax    $AX1
+set Xmin    [expr (-1.0*$Xmax)]
+
+if { $L < [expr (2.0*$W)] } { set dx [expr (2.0*$W)]
+} else { set dx $L }
+##DFISE          -Z   Y    X
+refinebox name=eAll \
+          min= "-2.0         $Ymin              $Xmin" \
+          max= " $Tsub       $Ymax              $Xmax" \
+          xrefine= 0.1*$Tsub yrefine= 2.0*$W    zrefine= $dx
+
+set tYmin  [expr (-1.0*$Wb)]
+set tYmax  [expr ( 1.0*$Wb)]
+if { 0.01 < [expr (0.5*$L)] } { set dx [expr (0.5*$L)]
+} else { set dx 0.01 }
+##DFISE          -Z   Y    X
+refinebox name=eSTI \
+          min= "-0.05        $tYmin             $Xmin" \
+          max= " 0.12        $tYmax             $Xmax" \
+          xrefine= 0.01      yrefine= 0.01      zrefine= $dx
+
+set tAY0  [expr (-0.5*$Wb-0.005)]
+set tAY1  [expr ( 0.5*$Wb+0.005)]
+if { 0.004 < [expr (0.2*$L)] } { set dx [expr (0.2*$L)]
+} else { set dx 0.004 }
+##DFISE          -Z   Y    X
+refinebox name=eActive \
+          min= "-0.012       $tAY0              $Xmin" \
+          max= " $H+0.010    $tAY1              $Xmax" \
+          xrefine= 0.005     yrefine= 0.005     zrefine= $dx
+
+##DFISE          -Z   Y    X
+refinebox name=eSDs \
+          min= "-0.012       $tAY0              $Xmin" \
+          max= " $H+0.010    $tAY1              $PX0" \
+          xrefine= 0.004     yrefine= 0.001     zrefine= 0.004
+refinebox name=eSDd \
+          min= "-0.012       $tAY0              $PX1" \
+          max= " $H+0.010    $tAY1              $Xmax" \
+          xrefine= 0.004     yrefine= 0.001     zrefine= 0.004
+
+set tAY0  [expr (-0.5*$Wb-0.002)]
+set tAY1  [expr ( 0.5*$Wb+0.002)]
+##DFISE          -Z   Y    X
+refinebox name=e0Active \
+          min= "-0.004       $tAY0              $SP1X0-0.000" \
+          max= " $H+0.010    $tAY1              $SP1X1+0.000" \
+          xrefine= 0.001     yrefine= 0.002     zrefine= 0.1*$L
+
+set tAY0  [expr (-0.5*$Wb-0.001)]
+set tAY1  [expr ( 0.5*$Wb+0.001)]
+##DFISE          -Z   Y    X
+refinebox name=eChannel \
+          min= "-0.001       $tAY0              $PX0-0.000" \
+          max= " $H+0.001    $tAY1              $PX1+0.000" \
+          xrefine= 0.001     yrefine= 0.002     zrefine= 0.05*$L
+          
+set tAY0  [expr (-0.5*$Wb-0.002)]
+set tAY1  [expr ( 0.5*$Wb+0.002)]
+set tz0  [expr ($H-0.005)]
+set tz1  [expr ($H+0.015)]
+if { 0.004 < [expr (0.2*$L)] } { set dx [expr (0.2*$L)]
+} else { set dx 0.004 }
+refinebox name=SDj0 \
+          min= " $tz0        $tAY0              $Xmin" \
+          max= " $tz1        $tAY1              $Xmax" \
+          xrefine= 0.001     yrefine= 0.002     zrefine= $dx
+          
+set tAY0  [expr (-0.5*$Wb-0.002)]
+set tAY1  [expr ( 0.5*$Wb+0.002)]
+set tz0  [expr ($H-0.002)]
+set tz1  [expr ($H+0.005)]
+if { 0.004 < [expr (0.2*$L)] } { set dx [expr (0.2*$L)]
+} else { set dx 0.004 }
+refinebox name=SDj \
+          min= " $tz0        $tAY0              $Xmin" \
+          max= " $tz1        $tAY1              $Xmax" \
+          xrefine= 0.0005     yrefine= 0.002     zrefine= $dx
+
+set tAY0  [expr (-0.5*$Wb-0.000)]
+set tAY1  [expr ( 0.5*$Wb+0.000)]
+set tx00  [expr ($PX0-0.007)]
+set tx01  [expr ($PX0+0.003)]
+set tx10  [expr ($PX1-0.003)]
+set tx11  [expr ($PX1+0.007)]
+refinebox name=jSDs \
+          min= " 0.000       $tAY0              $tx00" \
+          max= " $H+0.002    $tAY1              $tx01" \
+          xrefine= 0.001     yrefine= 0.002     zrefine= 0.0005
+refinebox name=jSDd \
+          min= " 0.000       $tAY0              $tx10" \
+          max= " $H+0.002    $tAY1              $tx11" \
+          xrefine= 0.001     yrefine= 0.002     zrefine= 0.0005
+
+refinebox name= Channel\
+   min= "-0.001    $tAY0  $SP1X0" \
+   max= "$H+0.001  $tAY1  $SP1X1"  \
+   min.normal.size= 5e-4 normal.growth.ratio= 1.5 \
+   interface.mat.pairs= {SiFin GATEox SiFin TopGATEox} all add
+   
+pdbSet InfoDefault 1
+
+refinebox remesh info=2
+
+
+
+
+###### 6: set TDR for device simulation ######
+transform reflect left
+SetTDRList   {Stress StressEL Dopants xMoleFraction} !Solutions
+struct tdr=n@node@_mc !gas interfaces alt.maternames

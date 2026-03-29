@@ -1,0 +1,61 @@
+#if @[ lsearch {DD3 DD3cal} @toolname@  ]@ >= 0
+Region  = "Gateoxide1" {
+
+Epsilon
+{ *  Ratio of the permittivities of material and vacuum
+
+  * epsilon() = epsilon
+         epsilon = @EPSOX@
+
+}
+
+}
+#else
+Region  = "Gateoxide1.1" {
+
+Epsilon
+{ *  Ratio of the permittivities of material and vacuum
+  * epsilon() = epsilon
+#if @[ lsearch {DD ClassDD} @toolname@  ]@ >= 0
+         epsilon = @EPSOX@
+#else
+         epsilon = @EPSOXNEW@
+#endif
+
+}
+
+}
+
+Region  = "Gateoxide1.2" {
+
+Epsilon
+{ *  Ratio of the permittivities of material and vacuum
+  * epsilon() = epsilon
+#if @[ lsearch {DD ClassDD} @toolname@  ]@ >= 0
+         epsilon = @EPSOX@
+#else
+         epsilon = @EPSOXNEW@
+#endif
+
+}
+
+}
+#endif
+
+
+Region  = "TopGateoxide1" {
+
+Epsilon
+{ *  Ratio of the permittivities of material and vacuum
+
+  * epsilon() = epsilon
+#if @[ lsearch {DD3 DD3cal DD ClassDD} @toolname@  ]@ >= 0
+         epsilon = @EPSOX@
+#else
+         epsilon = @TOPEPSOXNEW@
+#endif
+
+}
+
+}
+

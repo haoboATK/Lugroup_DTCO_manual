@@ -1,0 +1,5 @@
+DATE: 09/13/16 - 09/13/16 cmlog.txt
+
+This localhost (server) information:
+	Name:    tcadhpc10.internal.synopsys.com
+	Address: 10.15.101.44

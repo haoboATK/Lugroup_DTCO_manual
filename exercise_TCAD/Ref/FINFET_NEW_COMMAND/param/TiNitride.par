@@ -1,0 +1,11 @@
+
+Material = "TiNitride" {
+
+Bandgap
+{ * For conductors Band Gap is zero and the following parameters are used:
+        WorkFunction    = _WF_  # [eV]
+        FermiEnergy     = 11.7  # [eV]
+  * for backward compatibility Chi0 could be used to define the work function.
+}
+
+}

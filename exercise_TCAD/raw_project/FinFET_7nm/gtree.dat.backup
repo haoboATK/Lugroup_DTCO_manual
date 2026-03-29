@@ -1,0 +1,459 @@
+# Copyright (C) 1994-2017 Synopsys Inc.
+# swbtree vcurrent, Sat Mar 28 17:27:21 2026
+
+# --- simulation flow
+sprocess sprocess "" {}
+sprocess Threads "maximum" {4}
+sprocess Type "pMOS" {pMOS nMOS}
+sprocess sOri "100" {100}
+sprocess cDir "110" {110}
+sprocess tox "0.0006" {0.0006}
+sprocess L "0.025" {0.015}
+sprocess H "0.035" {0.030}
+sprocess Wtop "0.008" {0.005}
+sprocess Wbottom "0.008" {0.007}
+sprocess GeMoleCh "0.00" {0.00 0.50 1.00}
+sprocess GeMoleSRB "0.25" {0.50 0.20 0.80}
+sprocess GeMoleSD "0.00" {1.00 0.85 0.15 0.75 0.00 0.30}
+sprocess Dtemp "1.0e-3" {1000 650}
+sprocess Dtime "1.0e-3" {1.0e-3 5.0e-3 200.0e-3}
+svisual svisual "" {}
+sprocess1 sprocess "" {}
+xslice snmesh "-u -inf n@node|sprocess1@_mc_fps.tdr -outf n@node@_x_msh.tdr n@node@_msh" {}
+DD sdevice "" {}
+DD EPSOX "3.9" {3.9}
+DD EPSHIGHK "22.0" {22.0}
+DD WF "4.600" {4.332 4.365 4.432 4.593 4.524 4.645}
+DD VGATE "0.8" {-0.70 0.70}
+DD StressConst "1" {1}
+DD isStrain "1" {1}
+ClassDD sdevice "" {}
+iClassDD svisual "" {}
+ClassDDmodTox sdevice "" {}
+iClassDDmodTox svisual "" {}
+ClassDDmodToxWf sdevice "" {}
+iClassDDmodToxWf svisual "" {}
+ClassDDCheck sdevice "" {}
+ClassDDCheck Check "1" {1}
+qcClassDD3 sdevice "" {}
+qcClassDD3 VDRAIN "-0.05" {-0.05 0.05 -0.70 0.70}
+qcClassDD3 DDIdVg "1" {0}
+MC3 sdevice "" {}
+MC3 SurfScatt "0.85" {0.85}
+iMC3 svisual "" {}
+DD3 sdevice "" {}
+iDD3 svisual "" {}
+DD3cal sdevice "" {}
+iDD3cal svisual "" {}
+iMCave svisual "" {}
+iMCplot svisual "" {}
+DopingPlot svisual "" {}
+GePlot svisual "" {}
+XPlot svisual "" {}
+# --- variables
+variable dVT "0.0"
+variable dVT2 "0.0"
+# --- scenarios and parameter specs
+scenario default Threads ""
+scenario default Type ""
+scenario default sOri ""
+scenario default cDir ""
+scenario default tox ""
+scenario default L ""
+scenario default H ""
+scenario default Wtop ""
+scenario default Wbottom ""
+scenario default GeMoleCh ""
+scenario default GeMoleSRB ""
+scenario default GeMoleSD ""
+scenario default Dtemp ""
+scenario default Dtime ""
+scenario default EPSOX ""
+scenario default EPSHIGHK ""
+scenario default WF ""
+scenario default VGATE ""
+scenario default StressConst ""
+scenario default isStrain ""
+scenario default Check ""
+scenario default VDRAIN ""
+scenario default DDIdVg ""
+scenario default SurfScatt ""
+scenario nMOS Threads ""
+scenario nMOS Type ""
+scenario nMOS sOri ""
+scenario nMOS cDir ""
+scenario nMOS tox ""
+scenario nMOS L ""
+scenario nMOS H ""
+scenario nMOS Wtop ""
+scenario nMOS Wbottom ""
+scenario nMOS GeMoleCh ""
+scenario nMOS GeMoleSRB ""
+scenario nMOS GeMoleSD ""
+scenario nMOS Dtemp ""
+scenario nMOS Dtime ""
+scenario nMOS EPSOX ""
+scenario nMOS EPSHIGHK ""
+scenario nMOS WF ""
+scenario nMOS VGATE ""
+scenario nMOS StressConst ""
+scenario nMOS isStrain ""
+scenario nMOS Check ""
+scenario nMOS VDRAIN ""
+scenario nMOS DDIdVg ""
+scenario nMOS SurfScatt ""
+scenario pMOS Threads ""
+scenario pMOS Type ""
+scenario pMOS sOri ""
+scenario pMOS cDir ""
+scenario pMOS tox ""
+scenario pMOS L ""
+scenario pMOS H ""
+scenario pMOS Wtop ""
+scenario pMOS Wbottom ""
+scenario pMOS GeMoleCh ""
+scenario pMOS GeMoleSRB ""
+scenario pMOS GeMoleSD ""
+scenario pMOS Dtemp ""
+scenario pMOS Dtime ""
+scenario pMOS EPSOX ""
+scenario pMOS EPSHIGHK ""
+scenario pMOS WF ""
+scenario pMOS VGATE ""
+scenario pMOS StressConst ""
+scenario pMOS isStrain ""
+scenario pMOS Check ""
+scenario pMOS VDRAIN ""
+scenario pMOS DDIdVg ""
+scenario pMOS SurfScatt ""
+# --- simulation tree
+0 1 0 {} {nMOS pMOS default} 0
+1 2 1 {4} {nMOS pMOS default} 0
+2 3 2 {pMOS} {nMOS pMOS default} 0
+3 5 3 {100} {nMOS pMOS default} 0
+4 7 5 {110} {nMOS pMOS default} 0
+5 9 7 {0.0006} {nMOS pMOS default} 0
+6 11 9 {0.015} {nMOS pMOS default} 0
+7 13 11 {0.030} {nMOS pMOS default} 0
+8 15 13 {0.005} {nMOS pMOS default} 0
+9 17 15 {0.007} {nMOS pMOS default} 0
+10 19 17 {0.00} {nMOS pMOS default} 0
+11 25 19 {0.20} {nMOS pMOS default} 0
+12 31 25 {0.75} {nMOS pMOS default} 0
+13 37 31 {1000} {nMOS pMOS default} 0
+14 43 37 {200.0e-3} {nMOS pMOS default} 0
+15 49 43 {} {nMOS pMOS default} 0
+16 55 49 {} {nMOS pMOS default} 0
+17 61 55 {} {nMOS pMOS default} 0
+18 67 61 {} {nMOS pMOS default} 0
+19 73 67 {3.9} {nMOS pMOS default} 0
+20 79 73 {22.0} {nMOS pMOS default} 0
+21 85 79 {4.593} {nMOS pMOS default} 0
+22 91 85 {-0.70} {nMOS pMOS default} 0
+23 97 91 {1} {nMOS pMOS default} 0
+24 103 97 {1} {nMOS pMOS default} 0
+25 109 103 {} {nMOS pMOS default} 0
+26 115 109 {} {nMOS pMOS default} 0
+27 121 115 {} {nMOS pMOS default} 0
+28 127 121 {} {nMOS pMOS default} 0
+29 133 127 {} {nMOS pMOS default} 0
+30 139 133 {} {nMOS pMOS default} 0
+31 145 139 {} {nMOS pMOS default} 0
+32 151 145 {1} {nMOS pMOS default} 0
+33 157 151 {} {nMOS pMOS default} 0
+34 163 157 {-0.05} {nMOS pMOS default} 0
+35 175 163 {0} {nMOS pMOS default} 0
+36 187 175 {} {nMOS pMOS default} 0
+37 199 187 {0.85} {nMOS pMOS default} 0
+38 211 199 {} {nMOS pMOS default} 0
+39 223 211 {} {nMOS pMOS default} 0
+40 235 223 {} {nMOS pMOS default} 0
+41 247 235 {} {*nMOS *pMOS *default} 0
+42 259 247 {} {*nMOS *pMOS *default} 0
+43 271 259 {} {nMOS pMOS default} 0
+44 283 271 {} {nMOS pMOS default} 0
+45 295 283 {} {nMOS pMOS default} 0
+46 307 295 {} {nMOS pMOS default} 0
+47 319 307 {} {nMOS pMOS default} 0
+34 164 157 {-0.70} {nMOS pMOS default} 0
+35 176 164 {0} {nMOS pMOS default} 0
+36 188 176 {} {nMOS pMOS default} 0
+37 200 188 {0.85} {nMOS pMOS default} 0
+38 212 200 {} {nMOS pMOS default} 0
+39 224 212 {} {nMOS pMOS default} 0
+40 236 224 {} {nMOS pMOS default} 0
+41 248 236 {} {*nMOS *pMOS *default} 0
+42 260 248 {} {*nMOS *pMOS *default} 0
+43 272 260 {} {*nMOS *pMOS *default} 0
+44 284 272 {} {*nMOS *pMOS *default} 0
+45 296 284 {} {*nMOS *pMOS *default} 0
+46 308 296 {} {*nMOS *pMOS *default} 0
+47 320 308 {} {*nMOS *pMOS *default} 0
+10 20 17 {0.50} {nMOS pMOS default} 0
+11 26 20 {0.50} {nMOS pMOS default} 0
+12 32 26 {0.85} {nMOS pMOS default} 0
+13 38 32 {1000} {nMOS pMOS default} 0
+14 44 38 {5.0e-3} {nMOS pMOS default} 0
+15 50 44 {} {nMOS pMOS default} 0
+16 56 50 {} {nMOS pMOS default} 0
+17 62 56 {} {nMOS pMOS default} 0
+18 68 62 {} {nMOS pMOS default} 0
+19 74 68 {3.9} {nMOS pMOS default} 0
+20 80 74 {22.0} {nMOS pMOS default} 0
+21 86 80 {4.432} {nMOS pMOS default} 0
+22 92 86 {-0.70} {nMOS pMOS default} 0
+23 98 92 {1} {nMOS pMOS default} 0
+24 104 98 {1} {nMOS pMOS default} 0
+25 110 104 {} {nMOS pMOS default} 0
+26 116 110 {} {nMOS pMOS default} 0
+27 122 116 {} {nMOS pMOS default} 0
+28 128 122 {} {nMOS pMOS default} 0
+29 134 128 {} {nMOS pMOS default} 0
+30 140 134 {} {nMOS pMOS default} 0
+31 146 140 {} {nMOS pMOS default} 0
+32 152 146 {1} {nMOS pMOS default} 0
+33 158 152 {} {nMOS pMOS default} 0
+34 165 158 {-0.05} {nMOS pMOS default} 0
+35 177 165 {0} {nMOS pMOS default} 0
+36 189 177 {} {nMOS pMOS default} 0
+37 201 189 {0.85} {nMOS pMOS default} 0
+38 213 201 {} {nMOS pMOS default} 0
+39 225 213 {} {nMOS pMOS default} 0
+40 237 225 {} {nMOS pMOS default} 0
+41 249 237 {} {*nMOS *pMOS *default} 0
+42 261 249 {} {*nMOS *pMOS *default} 0
+43 273 261 {} {*nMOS *pMOS *default} 0
+44 285 273 {} {*nMOS *pMOS *default} 0
+45 297 285 {} {*nMOS *pMOS *default} 0
+46 309 297 {} {*nMOS *pMOS *default} 0
+47 321 309 {} {*nMOS *pMOS *default} 0
+34 166 158 {-0.70} {nMOS pMOS default} 0
+35 178 166 {0} {nMOS pMOS default} 0
+36 190 178 {} {nMOS pMOS default} 0
+37 202 190 {0.85} {nMOS pMOS default} 0
+38 214 202 {} {nMOS pMOS default} 0
+39 226 214 {} {nMOS pMOS default} 0
+40 238 226 {} {nMOS pMOS default} 0
+41 250 238 {} {*nMOS *pMOS *default} 0
+42 262 250 {} {*nMOS *pMOS *default} 0
+43 274 262 {} {*nMOS *pMOS *default} 0
+44 286 274 {} {*nMOS *pMOS *default} 0
+45 298 286 {} {*nMOS *pMOS *default} 0
+46 310 298 {} {*nMOS *pMOS *default} 0
+47 322 310 {} {*nMOS *pMOS *default} 0
+10 21 17 {1.00} {nMOS pMOS default} 0
+11 27 21 {0.80} {nMOS pMOS default} 0
+12 33 27 {1.00} {nMOS pMOS default} 0
+13 39 33 {650} {nMOS pMOS default} 0
+14 45 39 {1.0e-3} {nMOS pMOS default} 0
+15 51 45 {} {nMOS pMOS default} 0
+16 57 51 {} {nMOS pMOS default} 0
+17 63 57 {} {nMOS pMOS default} 0
+18 69 63 {} {nMOS pMOS default} 0
+19 75 69 {3.9} {nMOS pMOS default} 0
+20 81 75 {22.0} {nMOS pMOS default} 0
+21 87 81 {4.332} {nMOS pMOS default} 0
+22 93 87 {-0.70} {nMOS pMOS default} 0
+23 99 93 {1} {nMOS pMOS default} 0
+24 105 99 {1} {nMOS pMOS default} 0
+25 111 105 {} {nMOS pMOS default} 0
+26 117 111 {} {nMOS pMOS default} 0
+27 123 117 {} {nMOS pMOS default} 0
+28 129 123 {} {nMOS pMOS default} 0
+29 135 129 {} {nMOS pMOS default} 0
+30 141 135 {} {nMOS pMOS default} 0
+31 147 141 {} {nMOS pMOS default} 0
+32 153 147 {1} {nMOS pMOS default} 0
+33 159 153 {} {nMOS pMOS default} 0
+34 167 159 {-0.05} {nMOS pMOS default} 0
+35 179 167 {0} {nMOS pMOS default} 0
+36 191 179 {} {nMOS pMOS default} 0
+37 203 191 {0.85} {nMOS pMOS default} 0
+38 215 203 {} {nMOS pMOS default} 0
+39 227 215 {} {nMOS pMOS default} 0
+40 239 227 {} {nMOS pMOS default} 0
+41 251 239 {} {*nMOS *pMOS *default} 0
+42 263 251 {} {*nMOS *pMOS *default} 0
+43 275 263 {} {*nMOS *pMOS *default} 0
+44 287 275 {} {*nMOS *pMOS *default} 0
+45 299 287 {} {*nMOS *pMOS *default} 0
+46 311 299 {} {*nMOS *pMOS *default} 0
+47 323 311 {} {*nMOS *pMOS *default} 0
+34 168 159 {-0.70} {nMOS pMOS default} 0
+35 180 168 {0} {nMOS pMOS default} 0
+36 192 180 {} {nMOS pMOS default} 0
+37 204 192 {0.85} {nMOS pMOS default} 0
+38 216 204 {} {nMOS pMOS default} 0
+39 228 216 {} {nMOS pMOS default} 0
+40 240 228 {} {nMOS pMOS default} 0
+41 252 240 {} {*nMOS *pMOS *default} 0
+42 264 252 {} {*nMOS *pMOS *default} 0
+43 276 264 {} {*nMOS *pMOS *default} 0
+44 288 276 {} {*nMOS *pMOS *default} 0
+45 300 288 {} {*nMOS *pMOS *default} 0
+46 312 300 {} {*nMOS *pMOS *default} 0
+47 324 312 {} {*nMOS *pMOS *default} 0
+2 4 2 {nMOS} {nMOS pMOS default} 0
+3 6 4 {100} {nMOS pMOS default} 0
+4 8 6 {110} {nMOS pMOS default} 0
+5 10 8 {0.0006} {nMOS pMOS default} 0
+6 12 10 {0.015} {nMOS pMOS default} 0
+7 14 12 {0.030} {nMOS pMOS default} 0
+8 16 14 {0.005} {nMOS pMOS default} 0
+9 18 16 {0.007} {nMOS pMOS default} 0
+10 22 18 {0.00} {nMOS pMOS default} 0
+11 28 22 {0.20} {nMOS pMOS default} 0
+12 34 28 {0.00} {nMOS pMOS default} 0
+13 40 34 {1000} {nMOS pMOS default} 0
+14 46 40 {200.0e-3} {nMOS pMOS default} 0
+15 52 46 {} {nMOS pMOS default} 0
+16 58 52 {} {nMOS pMOS default} 0
+17 64 58 {} {nMOS pMOS default} 0
+18 70 64 {} {nMOS pMOS default} 0
+19 76 70 {3.9} {nMOS pMOS default} 0
+20 82 76 {22.0} {nMOS pMOS default} 0
+21 88 82 {4.645} {nMOS pMOS default} 0
+22 94 88 {0.70} {nMOS pMOS default} 0
+23 100 94 {1} {nMOS pMOS default} 0
+24 106 100 {1} {nMOS pMOS default} 0
+25 112 106 {} {nMOS pMOS default} 0
+26 118 112 {} {nMOS pMOS default} 0
+27 124 118 {} {nMOS pMOS default} 0
+28 130 124 {} {nMOS pMOS default} 0
+29 136 130 {} {nMOS pMOS default} 0
+30 142 136 {} {nMOS pMOS default} 0
+31 148 142 {} {nMOS pMOS default} 0
+32 154 148 {1} {nMOS pMOS default} 0
+33 160 154 {} {nMOS pMOS default} 0
+34 169 160 {0.05} {nMOS pMOS default} 0
+35 181 169 {0} {nMOS pMOS default} 0
+36 193 181 {} {nMOS pMOS default} 0
+37 205 193 {0.85} {nMOS pMOS default} 0
+38 217 205 {} {nMOS pMOS default} 0
+39 229 217 {} {nMOS pMOS default} 0
+40 241 229 {} {nMOS pMOS default} 0
+41 253 241 {} {*nMOS *pMOS *default} 0
+42 265 253 {} {*nMOS *pMOS *default} 0
+43 277 265 {} {nMOS pMOS default} 0
+44 289 277 {} {nMOS pMOS default} 0
+45 301 289 {} {nMOS pMOS default} 0
+46 313 301 {} {nMOS pMOS default} 0
+47 325 313 {} {nMOS pMOS default} 0
+34 170 160 {0.70} {nMOS pMOS default} 0
+35 182 170 {0} {nMOS pMOS default} 0
+36 194 182 {} {nMOS pMOS default} 0
+37 206 194 {0.85} {nMOS pMOS default} 0
+38 218 206 {} {nMOS pMOS default} 0
+39 230 218 {} {nMOS pMOS default} 0
+40 242 230 {} {nMOS pMOS default} 0
+41 254 242 {} {*nMOS *pMOS *default} 0
+42 266 254 {} {*nMOS *pMOS *default} 0
+43 278 266 {} {*nMOS *pMOS *default} 0
+44 290 278 {} {*nMOS *pMOS *default} 0
+45 302 290 {} {*nMOS *pMOS *default} 0
+46 314 302 {} {*nMOS *pMOS *default} 0
+47 326 314 {} {*nMOS *pMOS *default} 0
+10 23 18 {0.50} {nMOS pMOS default} 0
+11 29 23 {0.50} {nMOS pMOS default} 0
+12 35 29 {0.15} {nMOS pMOS default} 0
+13 41 35 {1000} {nMOS pMOS default} 0
+14 47 41 {5.0e-3} {nMOS pMOS default} 0
+15 53 47 {} {nMOS pMOS default} 0
+16 59 53 {} {nMOS pMOS default} 0
+17 65 59 {} {nMOS pMOS default} 0
+18 71 65 {} {nMOS pMOS default} 0
+19 77 71 {3.9} {nMOS pMOS default} 0
+20 83 77 {22.0} {nMOS pMOS default} 0
+21 89 83 {4.524} {nMOS pMOS default} 0
+22 95 89 {0.70} {nMOS pMOS default} 0
+23 101 95 {1} {nMOS pMOS default} 0
+24 107 101 {1} {nMOS pMOS default} 0
+25 113 107 {} {nMOS pMOS default} 0
+26 119 113 {} {nMOS pMOS default} 0
+27 125 119 {} {nMOS pMOS default} 0
+28 131 125 {} {nMOS pMOS default} 0
+29 137 131 {} {nMOS pMOS default} 0
+30 143 137 {} {nMOS pMOS default} 0
+31 149 143 {} {nMOS pMOS default} 0
+32 155 149 {1} {nMOS pMOS default} 0
+33 161 155 {} {nMOS pMOS default} 0
+34 171 161 {0.05} {nMOS pMOS default} 0
+35 183 171 {0} {nMOS pMOS default} 0
+36 195 183 {} {nMOS pMOS default} 0
+37 207 195 {0.85} {nMOS pMOS default} 0
+38 219 207 {} {nMOS pMOS default} 0
+39 231 219 {} {nMOS pMOS default} 0
+40 243 231 {} {nMOS pMOS default} 0
+41 255 243 {} {*nMOS *pMOS *default} 0
+42 267 255 {} {*nMOS *pMOS *default} 0
+43 279 267 {} {*nMOS *pMOS *default} 0
+44 291 279 {} {*nMOS *pMOS *default} 0
+45 303 291 {} {*nMOS *pMOS *default} 0
+46 315 303 {} {*nMOS *pMOS *default} 0
+47 327 315 {} {*nMOS *pMOS *default} 0
+34 172 161 {0.70} {nMOS pMOS default} 0
+35 184 172 {0} {nMOS pMOS default} 0
+36 196 184 {} {nMOS pMOS default} 0
+37 208 196 {0.85} {nMOS pMOS default} 0
+38 220 208 {} {nMOS pMOS default} 0
+39 232 220 {} {nMOS pMOS default} 0
+40 244 232 {} {nMOS pMOS default} 0
+41 256 244 {} {*nMOS *pMOS *default} 0
+42 268 256 {} {*nMOS *pMOS *default} 0
+43 280 268 {} {*nMOS *pMOS *default} 0
+44 292 280 {} {*nMOS *pMOS *default} 0
+45 304 292 {} {*nMOS *pMOS *default} 0
+46 316 304 {} {*nMOS *pMOS *default} 0
+47 328 316 {} {*nMOS *pMOS *default} 0
+10 24 18 {1.00} {nMOS pMOS default} 0
+11 30 24 {0.80} {nMOS pMOS default} 0
+12 36 30 {0.30} {nMOS pMOS default} 0
+13 42 36 {650} {nMOS pMOS default} 0
+14 48 42 {1.0e-3} {nMOS pMOS default} 0
+15 54 48 {} {nMOS pMOS default} 0
+16 60 54 {} {nMOS pMOS default} 0
+17 66 60 {} {nMOS pMOS default} 0
+18 72 66 {} {nMOS pMOS default} 0
+19 78 72 {3.9} {nMOS pMOS default} 0
+20 84 78 {22.0} {nMOS pMOS default} 0
+21 90 84 {4.365} {nMOS pMOS default} 0
+22 96 90 {0.70} {nMOS pMOS default} 0
+23 102 96 {1} {nMOS pMOS default} 0
+24 108 102 {1} {nMOS pMOS default} 0
+25 114 108 {} {nMOS pMOS default} 0
+26 120 114 {} {nMOS pMOS default} 0
+27 126 120 {} {nMOS pMOS default} 0
+28 132 126 {} {nMOS pMOS default} 0
+29 138 132 {} {nMOS pMOS default} 0
+30 144 138 {} {nMOS pMOS default} 0
+31 150 144 {} {nMOS pMOS default} 0
+32 156 150 {1} {nMOS pMOS default} 0
+33 162 156 {} {nMOS pMOS default} 0
+34 173 162 {0.05} {nMOS pMOS default} 0
+35 185 173 {0} {nMOS pMOS default} 0
+36 197 185 {} {nMOS pMOS default} 0
+37 209 197 {0.85} {nMOS pMOS default} 0
+38 221 209 {} {nMOS pMOS default} 0
+39 233 221 {} {nMOS pMOS default} 0
+40 245 233 {} {nMOS pMOS default} 0
+41 257 245 {} {*nMOS *pMOS *default} 0
+42 269 257 {} {*nMOS *pMOS *default} 0
+43 281 269 {} {*nMOS *pMOS *default} 0
+44 293 281 {} {*nMOS *pMOS *default} 0
+45 305 293 {} {*nMOS *pMOS *default} 0
+46 317 305 {} {*nMOS *pMOS *default} 0
+47 329 317 {} {*nMOS *pMOS *default} 0
+34 174 162 {0.70} {nMOS pMOS default} 0
+35 186 174 {0} {nMOS pMOS default} 0
+36 198 186 {} {nMOS pMOS default} 0
+37 210 198 {0.85} {nMOS pMOS default} 0
+38 222 210 {} {nMOS pMOS default} 0
+39 234 222 {} {nMOS pMOS default} 0
+40 246 234 {} {nMOS pMOS default} 0
+41 258 246 {} {*nMOS *pMOS *default} 0
+42 270 258 {} {*nMOS *pMOS *default} 0
+43 282 270 {} {*nMOS *pMOS *default} 0
+44 294 282 {} {*nMOS *pMOS *default} 0
+45 306 294 {} {*nMOS *pMOS *default} 0
+46 318 306 {} {*nMOS *pMOS *default} 0
+47 330 318 {} {*nMOS *pMOS *default} 0

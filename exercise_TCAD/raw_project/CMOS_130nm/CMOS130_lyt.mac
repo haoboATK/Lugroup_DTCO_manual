@@ -1,0 +1,42 @@
+# Sentaurus layout information - Thu Sep 24 23:46:21 2015
+# Version - J-2014.06.388444 (Production)
+# Layout file:  /remote/tdfm4/arupsaha/DB/130nmCMOS/CMOS_130nm/CMOS130.gds
+# Cell: CMOS
+# Cell transform info:  1 0 0 0 0
+default winding 1
+layout new CMOS -dbu 1e-09
+layer configure 1:0 -name Active -fill #ff0000 -pattern fill12-a -outline #ff0000 -lineStyle solid -lineWidth 1 
+layer configure 2:0 -name pWELL -fill #00ff00 -pattern fill12-b -outline #00ff00 -lineStyle solid -lineWidth 1 
+layer configure 3:0 -name POLY -fill #ffff00 -pattern fill12-c -outline #ffff00 -lineStyle solid -lineWidth 1 
+layer configure 5:0 -name VIA1 -fill #00ffff -pattern fill12-e -outline #00ffff -lineStyle solid -lineWidth 1 
+layer configure 6:0 -name METAL1 -fill #9900ff -pattern fill12-f -outline #9900ff -lineStyle solid -lineWidth 1 
+layer configure 7:0 -name VIA2 -fill #ffffff -pattern empty -outline #ffffff -lineStyle solid -lineWidth 1 
+layer configure 8:0 -name METAL2 -fill #999999 -pattern fill12 -outline #999999 -lineStyle solid -lineWidth 1 
+layer configure 40:1 -name Mesh_EXT -fill #ffff00 -pattern fill12 -outline #00ff00 -lineStyle solid -lineWidth 1 
+layer configure 50:1 -name GATE -fill #ff9900 -pattern fill12-b -outline #ff0000 -lineStyle solid -lineWidth 1 
+layer configure 51:0 -name SOURCE -fill #ff0099 -pattern fill12-c -outline #ff0000 -lineStyle solid -lineWidth 1 
+gauge add {-75 190 -75 -130} PMOS
+stretch add {-85 35 50 35} PMOS_L
+rectangle -layer 1:0 {-85 -140 -65 200}
+rectangle -layer 2:0 {-85 -140 -65 200}
+rectangle -layer 3:0 {-85 0 -65 60}
+rectangle -layer 5:0 {-85 130 -65 200}
+rectangle -layer 5:0 {-85 -140 -65 -70}
+rectangle -layer 6:0 {-85 180 -65 200}
+rectangle -layer 40:1 {-85 -15 -65 15}
+rectangle -layer 40:1 {-85 45 -65 75}
+rectangle -layer 50:1 {-85 5 -65 55}
+rectangle -layer 51:0 {-85 120 -65 200}
+gauge add {925 190 925 -130} NMOS
+stretch add {915 35 1050 35} NMOS_L
+rectangle -layer 1:0 {915 -140 935 200}
+rectangle -layer 3:0 {915 0 935 60}
+rectangle -layer 5:0 {915 130 935 200}
+rectangle -layer 5:0 {915 -140 935 -70}
+rectangle -layer 6:0 {915 180 935 200}
+rectangle -layer 40:1 {915 -15 935 15}
+rectangle -layer 40:1 {915 45 935 75}
+rectangle -layer 50:1 {915 5 935 55}
+rectangle -layer 51:0 {915 120 935 200}
+select clear
+catch {view default}

@@ -1,0 +1,21 @@
+# Sentaurus markups information - Thu Sep 24 23:46:09 2015
+# Version - J-2014.06.388444 (Production)
+default winding 1
+layout open CMOS130.gds CMOS
+cell transform 1 0 0 0 0
+layer configure 1:0 -name Active -fill #ff0000 -pattern fill12-a -outline #ff0000 -lineStyle solid -lineWidth 1 
+layer configure 2:0 -name pWELL -fill #00ff00 -pattern fill12-b -outline #00ff00 -lineStyle solid -lineWidth 1 
+layer configure 3:0 -name POLY -fill #ffff00 -pattern fill12-c -outline #ffff00 -lineStyle solid -lineWidth 1 
+layer configure 5:0 -name VIA1 -fill #00ffff -pattern fill12-e -outline #00ffff -lineStyle solid -lineWidth 1 
+layer configure 6:0 -name METAL1 -fill #9900ff -pattern fill12-f -outline #9900ff -lineStyle solid -lineWidth 1 
+layer configure 7:0 -name VIA2 -fill #ffffff -pattern empty -outline #ffffff -lineStyle solid -lineWidth 1 
+layer configure 8:0 -name METAL2 -fill #999999 -pattern fill12 -outline #999999 -lineStyle solid -lineWidth 1 
+layer configure 40:1 -name Mesh_EXT -fill #ffff00 -pattern fill12 -outline #00ff00 -lineStyle solid -lineWidth 1 
+layer configure 50:1 -name GATE -fill #ff9900 -pattern fill12-b -outline #ff0000 -lineStyle solid -lineWidth 1 
+layer configure 51:0 -name SOURCE -fill #ff0099 -pattern fill12-c -outline #ff0000 -lineStyle solid -lineWidth 1 
+stretch add {-85 35 50 35} PMOS_L
+stretch add {915 35 1050 35} NMOS_L
+gauge add {-75 190 -75 -130} PMOS
+gauge add {925 190 925 -130} NMOS
+select clear
+catch {view default}

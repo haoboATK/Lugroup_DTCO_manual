@@ -1,0 +1,68 @@
+BALMob
+{
+*  k_e = 8.5
+*  k_h = 11.0 
+  k_e = 1.0e6
+  k_h = 1.0e6
+}
+
+SBmob:
+{
+  autoorientation = 2
+  coordinatesystem = 4
+}
+
+LatticeParameters
+        {
+#if "_sOri_" == "100" && "_cDir_" == "100"
+        X       = (1, 0, 0) #[1]
+        Y       = (0, 1, 0) #[1]
+#elif "_sOri_" == "100" && "_cDir_" == "110"
+        X       = (0, 0, 1) #[1]
+        Y       = (1, -1, 0) #[1]
+#elif "_sOri_" == "110" && "_cDir_" == "100"
+        X       = (1, 1, 0) #[1]
+        Y       = (1, -1, 0) #[1]
+#elif "_sOri_" == "110" && "_cDir_" == "110"
+        X       = (1, 1, 0) #[1]
+        Y       = (0, 0, 1) #[1]
+#endif
+        }
+
+QuantumPotentialParameters "100"
+        {
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+        }
+
+QuantumPotentialParameters "110"
+        {
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+        }
+
+QuantumPotentialParameters "111"
+        {
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+        }
+        
+        
+        
+
+IALMob "100":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+IALMob "110":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+IALMob "111":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+

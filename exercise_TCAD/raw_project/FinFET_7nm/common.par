@@ -1,0 +1,74 @@
+BALMob
+{
+*  k_e = 8.5
+*  k_h = 11.0 
+  k_e = 1.0e6
+  k_h = 1.0e6
+}
+
+SBmob:
+{
+  autoorientation = 2
+  coordinatesystem = 4
+}
+
+LatticeParameters
+        {
+#if "@sOri@" == "100" && "@cDir@" == "100"
+        X       = (1, 0, 0) #[1]
+        Y       = (0, 1, 0) #[1]
+#elif "@sOri@" == "100" && "@cDir@" == "110"
+        X       = (0, 0, 1) #[1]
+        Y       = (1, -1, 0) #[1]
+#elif "@sOri@" == "110" && "@cDir@" == "100"
+        X       = (1, 1, 0) #[1]
+        Y       = (1, -1, 0) #[1]
+#elif "@sOri@" == "110" && "@cDir@" == "110"
+        X       = (1, 1, 0) #[1]
+        Y       = (0, 0, 1) #[1]
+#else
+puts "Orientation is beyond the scope.. Check it out..."
+exit
+#endif
+        }
+
+QuantumPotentialParameters "100"
+        {
+#if @[ lsearch {qcClassDD3 MC3 DD3 DD3cmos DD3cal} @toolname@  ]@ >= 0
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+#endif
+        }
+
+QuantumPotentialParameters "110"
+        {
+#if @[ lsearch {qcClassDD3 MC3 DD3 DD3cmos DD3cal} @toolname@  ]@ >= 0
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+#endif
+        }
+
+QuantumPotentialParameters "111"
+        {
+#if @[ lsearch {qcClassDD3 MC3 DD3 DD3cmos DD3cal} @toolname@  ]@ >= 0
+                                alpha[1]        =       0.1     0.1
+                                alpha[2]        =       1.0     1.0
+                                alpha[3]        =       1.0     1.0
+#endif
+        }
+
+IALMob "100":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+IALMob "110":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+IALMob "111":
+        {
+        a_ph2d  = 0.0 ,   0.0
+        }
+
